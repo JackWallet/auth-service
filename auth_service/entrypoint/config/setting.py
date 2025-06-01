@@ -36,3 +36,7 @@ class PostgresSettings(BaseModel):
                 ),
             ),
         )
+
+
+class LoggingLevelSettings(BaseModel):
+    logging_level: str = Field(alias="LOGGING_LEVEL")
