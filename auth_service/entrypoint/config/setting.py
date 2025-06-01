@@ -2,6 +2,8 @@ from typing import NewType, cast
 
 from pydantic import BaseModel, Field, PostgresDsn, field_validator
 
+from entrypoint.logging.logs import LoggingLevel
+
 PostgresSettingsDsn = NewType("PostgresSettingsDsn", str)
 
 
@@ -39,4 +41,4 @@ class PostgresSettings(BaseModel):
 
 
 class LoggingLevelSettings(BaseModel):
-    logging_level: str = Field(alias="LOGGING_LEVEL")
+    logging_level: LoggingLevel = Field(alias="LOGGING_LEVEL")
