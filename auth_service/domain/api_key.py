@@ -16,7 +16,7 @@ class APIKeyStatusEnum(StrEnum):
     EXPIRED = "expired"
 
 
-@dataclass
+@dataclass(slots=True)
 class APIKey:
     key_id: ApiKeyId | None
     key: str
