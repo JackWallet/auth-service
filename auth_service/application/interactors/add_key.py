@@ -33,7 +33,7 @@ class AddKey(Interactor[AddKeyDTO, None]):
         self,
         api_key_writer: ApiKeyWriterRepository,
         transaction_manager: TransactionManager,
-        secret_generator: SecretGenerator,
+        secret_generator: SecretGenerator[str],
     ) -> None:
         self._api_key_writer = api_key_writer
         self._transaction_manager = transaction_manager
