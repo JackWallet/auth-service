@@ -1,16 +1,16 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from application.abstract.database.repositories.api_key_repository import (
+from application.ports.database.repositories.api_key_repository import (
     ApiKeyWriterRepository,
 )
 from application.abstract.database.secret_generator import (
     SecretGenerator,
 )
-from application.abstract.database.transaction_manager import (
+from application.ports.database.transaction_manager import (
     TransactionManager,
 )
-from application.abstract.interactor import Interactor
+from application.ports.interactor import Interactor
 from domain.api_key import APIKey, APIKeyAccessLevelEnum, APIKeyStatusEnum
 
 
@@ -39,5 +39,4 @@ class AddKey(Interactor[AddKeyDTO, None]):
         self._transaction_manager = transaction_manager
         self._secret_generator = secret_generator
 
-    def __call__(self, data: AddKeyDTO) -> None:
-        ...
+    def __call__(self, data: AddKeyDTO) -> None: ...
