@@ -80,3 +80,6 @@ ignore = [
 ]
 # Sort in alphabet order
 extend-select = ["I"]
+
+[tool.ruff.lint.per-file-ignores]
+"auth_service/domain/value_objects/base.py" = ["B024"]
