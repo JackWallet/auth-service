@@ -28,7 +28,7 @@ class AddKeyResultDTO:
     key: str
 
 
-class AddKey(Interactor[AddKeyDTO, None]):
+class IssueKey(Interactor[AddKeyDTO, None]):
     def __init__(
         self,
         api_key_writer: ApiKeyWriterRepository,
