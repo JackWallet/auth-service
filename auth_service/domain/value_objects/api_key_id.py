@@ -4,5 +4,5 @@ from domain.value_objects.base import ValueObject
 
 
 @dataclass(frozen=True)
-class KeyId(ValueObject):
+class ApiKeyId(ValueObject):
     id: int
