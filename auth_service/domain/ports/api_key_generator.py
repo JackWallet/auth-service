@@ -1,10 +1,10 @@
-from abc import abstractmethod
-from typing import Generic, Protocol, TypeVar
+from abc import ABC, abstractmethod
+from typing import Generic
 
-SecretKey = TypeVar("SecretKey")
+from domain.ports.api_key_type import SecretKey
 
 
-class APIKeyGenerator(Protocol, Generic[SecretKey]):
+class APIKeyGenerator(ABC, Generic[SecretKey]):
     @abstractmethod
     def generate_key(self) -> SecretKey:
-        pass
+        raise NotImplementedError
