@@ -8,7 +8,7 @@ from application.ports.database.transaction_manager import (
     TransactionManager,
 )
 from application.ports.interactor import Interactor
-from domain.models.api_key import (
+from domain.entities.api_key import (
     APIKey,
     APIKeyAccessLevelEnum,
     APIKeyStatusEnum,
