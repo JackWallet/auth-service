@@ -1,8 +1,7 @@
-from abc import abstractmethod
-from typing import Protocol
+from abc import ABC, abstractmethod
 
 
-class APIKeyEncryption(Protocol):
+class APIKeyEncryption(ABC):
     @abstractmethod
     def encrypt(self, key: str) -> str:
         raise NotImplementedError
