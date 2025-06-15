@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Protocol
 
-from domain.api_key import APIKey
+from domain.models.api_key import APIKey
 
 
 class ApiKeyReaderRepository(Protocol):

@@ -4,14 +4,15 @@ from datetime import datetime
 from application.ports.database.repositories.api_key_repository import (
     ApiKeyWriterRepository,
 )
-from application.abstract.database.secret_generator import (
-    SecretGenerator,
-)
 from application.ports.database.transaction_manager import (
     TransactionManager,
 )
 from application.ports.interactor import Interactor
-from domain.api_key import APIKey, APIKeyAccessLevelEnum, APIKeyStatusEnum
+from domain.models.api_key import (
+    APIKey,
+    APIKeyAccessLevelEnum,
+    APIKeyStatusEnum,
+)
 
 
 # Slots makes it impossible for this dataclass to obtain any new attributes
