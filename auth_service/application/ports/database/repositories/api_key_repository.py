@@ -10,7 +10,7 @@ class ApiKeyReaderRepository(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    def is_allower_to_write(self, key_id: str) -> bool:
+    def is_allowed_to_write(self, key_id: str) -> bool:
         raise NotImplementedError
 
 
