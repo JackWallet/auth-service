@@ -7,24 +7,25 @@ from domain.entities.api_key import (
 )
 from domain.ports.api_key_encryption import APIKeyEncryption
 from domain.ports.api_key_generator import APIKeyGenerator
-from domain.ports.api_key_type import SecretKey
 
 
 class APIKeyService:
     def __init__(
         self,
-        key_generator: APIKeyGenerator[SecretKey],
-        key_encryption: APIKeyEncryption[SecretKey],
+        key_generator: APIKeyGenerator,
+        key_encryption: APIKeyEncryption,
     ) -> None:
         self._key_generator = key_generator
         self._key_encryption = key_encryption
 
     def create(self, access_level: APIKeyAccessLevelEnum) -> APIKey:
         now = datetime.now(tz=UTC)
-        key = self._key_generator.generate_key()
+        key_raw = self._key_generator.generate_key()
+        key_encrypted = self._key_encryption.encrypt(key=key_raw)
+
         return APIKey(
             key_id=None,
-            key=str(key),
+            key=key_encrypted,
             access_level=access_level,
             status=APIKeyStatusEnum.ACTIVE,
             created_at=now,
