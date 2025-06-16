@@ -9,15 +9,15 @@ from application.ports.database.transaction_manager import (
 )
 from application.ports.interactor import Interactor
 from domain.entities.api_key import (
-    APIKey,
     APIKeyAccessLevelEnum,
     APIKeyStatusEnum,
 )
+from domain.services.api_key import APIKeyService
 
 
 # Slots makes it impossible for this dataclass to obtain any new attributes
 @dataclass(frozen=True, slots=True)
-class AddKeyDTO:
+class AddKeyDTO:  # type:ignore[misc]
     access_level: APIKeyAccessLevelEnum
     status: APIKeyStatusEnum
     created_at: datetime
@@ -25,7 +25,7 @@ class AddKeyDTO:
 
 
 @dataclass(frozen=True, slots=True)
-class AddKeyResultDTO:
+class AddKeyResultDTO:  # type:ignore[misc]
     key: str
 
 
@@ -34,10 +34,10 @@ class IssueKey(Interactor[AddKeyDTO, None]):
         self,
         api_key_writer: ApiKeyWriterRepository,
         transaction_manager: TransactionManager,
-        secret_generator: SecretGenerator[str],
+        api_key_service: APIKeyService,
     ) -> None:
         self._api_key_writer = api_key_writer
         self._transaction_manager = transaction_manager
-        self._secret_generator = secret_generator
+        self._api_key_service = api_key_service
 
     def __call__(self, data: AddKeyDTO) -> None: ...
