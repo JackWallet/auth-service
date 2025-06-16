@@ -1,14 +1,11 @@
 from abc import ABC, abstractmethod
-from typing import Generic
-
-from domain.ports.api_key_type import SecretKey
 
 
-class APIKeyEncryption(ABC, Generic[SecretKey]):
+class APIKeyEncryption(ABC):
     @abstractmethod
-    def encrypt(self, key: str) -> SecretKey:
+    def encrypt(self, key: str) -> str:
         raise NotImplementedError
 
     @abstractmethod
-    def decrypt(self, key: str) -> SecretKey:
+    def decrypt(self, key: str) -> str:
         raise NotImplementedError
