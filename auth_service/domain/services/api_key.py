@@ -18,7 +18,7 @@ class APIKeyService:
         self._key_generator = key_generator
         self._key_encryption = key_encryption
 
-    def create(self, access_level: APIKeyAccessLevelEnum) -> APIKey:
+    def create(self) -> APIKey:
         now = datetime.now(tz=UTC)
         key_raw = self._key_generator.generate_key()
         key_encrypted = self._key_encryption.encrypt(key=key_raw)
@@ -26,7 +26,7 @@ class APIKeyService:
         return APIKey(
             key_id=None,
             key=key_encrypted,
-            access_level=access_level,
+            access_level=APIKeyAccessLevelEnum.READ,
             status=APIKeyStatusEnum.ACTIVE,
             created_at=now,
             last_accessed=now,
