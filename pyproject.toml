@@ -26,6 +26,7 @@ strict = true
 pretty = true
 local_partial_types = true
 mypy_path = "auth_service"
+warn_unused_ignores = false
 
 [tool.ruff]
 exclude = [
