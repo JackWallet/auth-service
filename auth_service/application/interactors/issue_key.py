@@ -2,6 +2,7 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 
+from application.ports.auth.api_key_id_provider import ApiKeyIdProvider
 from application.ports.database.repositories.api_key_repository import (
     ApiKeyWriterRepository,
 )
@@ -40,6 +41,7 @@ class IssueKey(Interactor[IssueKeyRequest, IssueKeyResult]):
         api_key_writer: ApiKeyWriterRepository,
         transaction_manager: TransactionManager,
         api_key_service: APIKeyService,
+        id_provider: ApiKeyIdProvider,
     ) -> None:
         self._api_key_writer = api_key_writer
         self._transaction_manager = transaction_manager
