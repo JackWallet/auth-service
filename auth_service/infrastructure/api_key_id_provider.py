@@ -1,26 +1,16 @@
-from dataclasses import dataclass
-
-from application.ports.auth.id_provider import IdProvider
+from application.ports.auth.api_key_id_provider import (
+    ApiKeyIdProvider,
+    ApiKeyIdProviderRequest,
+    ApiKeyIdProviderResponce,
+)
 from application.ports.database.repositories.api_key_repository import (
     ApiKeyReaderRepository,
 )
-from domain.entities.api_key import APIKeyAccessLevelEnum, APIKeyStatusEnum
 from domain.ports.api_key_encryption import APIKeyEncryption
 
 
-@dataclass(frozen=True, slots=True)
-class ApiKeyIdProviderRequest:
-    key_raw: str
-
-
-@dataclass(frozen=True, slots=True)
-class ApiKeyIdProviderResponce:
-    key_status: APIKeyStatusEnum
-    key_access_level: APIKeyAccessLevelEnum
-
-
-class ApiKeyIdProvider(
-    IdProvider[ApiKeyIdProviderRequest, ApiKeyIdProviderResponce],
+class ApiKeyIdProviderImpl(
+    ApiKeyIdProvider,
 ):
     def __init__(
         self,
