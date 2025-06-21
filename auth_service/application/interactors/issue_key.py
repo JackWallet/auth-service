@@ -13,6 +13,7 @@ from domain.entities.api_key import (
     APIKeyAccessLevelEnum,
     APIKeyStatusEnum,
 )
+from domain.entities.api_key_id import APIKeyId
 from domain.services.api_key import APIKeyService
 
 logger = logging.getLogger(__name__)
@@ -21,7 +22,6 @@ logger = logging.getLogger(__name__)
 # Slots makes it impossible for this dataclass to obtain any new attributes
 @dataclass(frozen=True, slots=True)
 class IssueKeyRequest:  # type:ignore[misc]
-    api_key_access_level: APIKeyAccessLevelEnum
     status: APIKeyStatusEnum
     created_at: datetime
     last_accessed: datetime
@@ -31,7 +31,7 @@ class IssueKeyRequest:  # type:ignore[misc]
 @dataclass(frozen=True, slots=True)
 class IssueKeyResult:  # type:ignore[misc]
     key: str
-    access_level: APIKeyAccessLevelEnum
+    key_id: APIKeyId
 
 
 class IssueKey(Interactor[IssueKeyRequest, IssueKeyResult]):
@@ -46,7 +46,7 @@ class IssueKey(Interactor[IssueKeyRequest, IssueKeyResult]):
         self._api_key_service = api_key_service
 
     def __call__(self, data: IssueKeyRequest) -> IssueKeyResult:
-        api_key = self._api_key_service.create(access_level=data.access_level)
+        api_key = self._api_key_service.create()
         self._api_key_writer.add_api_key(api_key=api_key)
         await self._transaction_manager.commit()
         return IssueKeyResult()
