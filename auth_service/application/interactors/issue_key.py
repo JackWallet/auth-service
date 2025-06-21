@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -14,22 +15,26 @@ from domain.entities.api_key import (
 )
 from domain.services.api_key import APIKeyService
 
+logger = logging.getLogger(__name__)
+
 
 # Slots makes it impossible for this dataclass to obtain any new attributes
 @dataclass(frozen=True, slots=True)
-class AddKeyDTO:  # type:ignore[misc]
-    access_level: APIKeyAccessLevelEnum
+class IssueKeyRequest:  # type:ignore[misc]
+    api_key_access_level: APIKeyAccessLevelEnum
     status: APIKeyStatusEnum
     created_at: datetime
     last_accessed: datetime
+    request_access_level: APIKeyAccessLevelEnum
 
 
 @dataclass(frozen=True, slots=True)
-class AddKeyResultDTO:  # type:ignore[misc]
+class IssueKeyResult:  # type:ignore[misc]
     key: str
+    access_level: APIKeyAccessLevelEnum
 
 
-class IssueKey(Interactor[AddKeyDTO, AddKeyResultDTO]):
+class IssueKey(Interactor[IssueKeyRequest, IssueKeyResult]):
     def __init__(
         self,
         api_key_writer: ApiKeyWriterRepository,
@@ -40,7 +45,8 @@ class IssueKey(Interactor[AddKeyDTO, AddKeyResultDTO]):
         self._transaction_manager = transaction_manager
         self._api_key_service = api_key_service
 
-    def __call__(self, data: AddKeyDTO) -> AddKeyResultDTO:
+    def __call__(self, data: IssueKeyRequest) -> IssueKeyResult:
         api_key = self._api_key_service.create(access_level=data.access_level)
         self._api_key_writer.add_api_key(api_key=api_key)
-        return AddKeyResultDTO()
+        await self._transaction_manager.commit()
+        return IssueKeyResult()
