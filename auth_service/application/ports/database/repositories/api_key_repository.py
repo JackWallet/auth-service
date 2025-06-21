@@ -6,11 +6,7 @@ from domain.entities.api_key import APIKey
 
 class ApiKeyReaderRepository(Protocol):
     @abstractmethod
-    async def is_allowed_to_read(self, key_id: str) -> bool:
-        raise NotImplementedError
-
-    @abstractmethod
-    async def is_allowed_to_write(self, key_id: str) -> bool:
+    async def get_key_by_key_value(self, key_id: str) -> APIKey:
         raise NotImplementedError
 
 
