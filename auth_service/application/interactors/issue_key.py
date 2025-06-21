@@ -2,7 +2,7 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 
-from application.ports.auth.api_key_id_provider import ApiKeyIdProvider
+from infrastructure.api_key_id_provider import ApiKeyIdProvider
 from application.ports.database.repositories.api_key_repository import (
     ApiKeyWriterRepository,
 )
@@ -46,6 +46,7 @@ class IssueKey(Interactor[IssueKeyRequest, IssueKeyResult]):
         self._api_key_writer = api_key_writer
         self._transaction_manager = transaction_manager
         self._api_key_service = api_key_service
+        self._id_provider = id_provider
 
     async def __call__(self, data: IssueKeyRequest) -> IssueKeyResult:
         api_key = self._api_key_service.create()
