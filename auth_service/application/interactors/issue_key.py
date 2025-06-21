@@ -29,7 +29,7 @@ class AddKeyResultDTO:  # type:ignore[misc]
     key: str
 
 
-class IssueKey(Interactor[AddKeyDTO, None]):
+class IssueKey(Interactor[AddKeyDTO, AddKeyResultDTO]):
     def __init__(
         self,
         api_key_writer: ApiKeyWriterRepository,
@@ -40,4 +40,7 @@ class IssueKey(Interactor[AddKeyDTO, None]):
         self._transaction_manager = transaction_manager
         self._api_key_service = api_key_service
 
-    def __call__(self, data: AddKeyDTO) -> None: ...
+    def __call__(self, data: AddKeyDTO) -> AddKeyResultDTO:
+        api_key = self._api_key_service.create(access_level=data.access_level)
+        self._api_key_writer.add_api_key(api_key=api_key)
+        return AddKeyResultDTO()
