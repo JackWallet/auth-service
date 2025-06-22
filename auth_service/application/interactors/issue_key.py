@@ -1,8 +1,16 @@
 import logging
 from dataclasses import dataclass
-from datetime import datetime
 
-from application.exceptions.base import ApiKeyNotFoundError
+from application.exceptions.auth import (
+    ApiKeyNotFoundAuthError,
+    ApiKeyRevokedAuthError,
+    InsufficientPrivilegesAuthError,
+)
+from application.exceptions.validation import (
+    ApiKeyExpiredValidationError,
+    ApiKeyRevokedValidationError,
+    InsufficientPrivilegesValidationError,
+)
 from application.ports.access_validator import AccessValidator
 from application.ports.auth.api_key_id_provider import (
     ApiKeyIdProvider,
@@ -17,7 +25,6 @@ from application.ports.database.transaction_manager import (
 from application.ports.interactor import Interactor
 from domain.entities.api_key import (
     APIKeyAccessLevelEnum,
-    APIKeyStatusEnum,
 )
 from domain.entities.api_key_id import APIKeyId
 from domain.services.api_key import APIKeyService
@@ -55,20 +62,44 @@ class IssueKey(Interactor[IssueKeyRequest, IssueKeyResult]):
     async def __call__(self, data: IssueKeyRequest) -> IssueKeyResult:
         id_provider_responce = (
             await self._id_provider.get_user_acknowledgements(
-                data=ApiKeyIdProviderRequest(key_raw=data.request_api_key_raw),
+                data=ApiKeyIdProviderRequest(
+                    key_raw=data.request_from_api_key_raw,
+                ),
             )
         )
         if id_provider_responce is None:
-            raise ApiKeyNotFoundError
+            raise ApiKeyNotFoundAuthError(
+                raw_key=data.request_from_api_key_raw,
+            )
+        try:
+            self._api_key_validator.validate_access_level(
+                input_access_level=id_provider_responce.key_access_level,
+                target_access_level=APIKeyAccessLevelEnum.WRITE,
+            )
+        except InsufficientPrivilegesValidationError as validation_err:
+            insuf_priveleges_auth_err = InsufficientPrivilegesAuthError(
+                raw_key=data.request_from_api_key_raw,
+                access_level_required=APIKeyAccessLevelEnum.WRITE,
+            )
+            logger.info(str(insuf_priveleges_auth_err))
+            raise insuf_priveleges_auth_err from validation_err
 
-        self._api_key_validator.validate_access_level(
-            input_access_level=id_provider_responce.key_access_level,
-            target_access_level=APIKeyAccessLevelEnum.WRITE,
-        )
-        self._api_key_validator.validate_access_status(
-            api_key_status=id_provider_responce.key_status
-        )
-
+        try:
+            self._api_key_validator.validate_access_status(
+                api_key_status=id_provider_responce.key_status,
+            )
+        except ApiKeyRevokedValidationError as validation_err:
+            key_revoked_auth_err = ApiKeyRevokedAuthError(
+                raw_key=data.request_from_api_key_raw,
+            )
+            logger.info(str(key_revoked_auth_err))
+            raise key_revoked_auth_err from validation_err
+        except ApiKeyExpiredValidationError as validation_err:
+            key_expired_auth_err = ApiKeyRevokedAuthError(
+                raw_key=data.request_from_api_key_raw,
+            )
+            logger.info(str(key_expired_auth_err))
+            raise key_expired_auth_err from validation_err
 
         api_key = self._api_key_service.create()
         await self._api_key_writer.add_api_key(api_key=api_key)
