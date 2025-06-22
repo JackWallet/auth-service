@@ -15,21 +15,21 @@ class AuthenticationError(ApplicationError):
 
 
 class ApiKeyExpiredError(AuthenticationError):
-    def __init__(self, api_key_raw: str) -> None:
+    def __init__(self) -> None:
         super().__init__(
-            f"Api Key {api_key_raw} has been expired",
+            "Api Key has been expired",
         )
 
 
 class ApiKeyRevokedError(AuthenticationError):
-    def __init__(self, api_key_raw: str) -> None:
+    def __init__(self) -> None:
         super().__init__(
-            f"Api Key {api_key_raw} has been revoked",
+            "Api Key has been revoked",
         )
 
 
 class ApiKeyNotFoundError(AuthenticationError):
-    def __init__(self, api_key_raw: str) -> None:
+    def __init__(self) -> None:
         super().__init__(
-            f"Api Key {api_key_raw} doesn't exist",
+            "Api Key doesn't exist",
         )
