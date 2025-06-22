@@ -9,7 +9,7 @@ from domain.entities.api_key import APIKeyAccessLevelEnum, APIKeyStatusEnum
 
 class ApiKeyValidator(AccessValidator):
     @staticmethod
-    def validate_api_key_access_level(
+    def validate_access_level(
         input_access_level: APIKeyAccessLevelEnum,
         target_access_level: APIKeyAccessLevelEnum,
     ) -> None:
@@ -20,7 +20,7 @@ class ApiKeyValidator(AccessValidator):
             raise InsufficientPrivilegesError
 
     @staticmethod
-    def validate_api_key_status(api_key_status: APIKeyStatusEnum) -> None:
+    def validate_access_status(api_key_status: APIKeyStatusEnum) -> None:
         if api_key_status is APIKeyStatusEnum.EXPIRED:
             raise ApiKeyExpiredError
         if api_key_status is APIKeyStatusEnum.REVOKED:
