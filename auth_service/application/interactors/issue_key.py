@@ -28,10 +28,7 @@ logger = logging.getLogger(__name__)
 # Slots makes it impossible for this dataclass to obtain any new attributes
 @dataclass(frozen=True, slots=True)
 class IssueKeyRequest:  # type:ignore[misc]
-    status: APIKeyStatusEnum
-    created_at: datetime
-    last_accessed: datetime
-    request_api_key_raw: str
+    request_from_api_key_raw: str
 
 
 @dataclass(frozen=True, slots=True)
