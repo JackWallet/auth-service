@@ -25,10 +25,3 @@ class ApiKeyRevokedValidationError(ValidationError):
         super().__init__(
             "Api Key has been revoked",
         )
-
-
-class ApiKeyNotFoundValidationError(ValidationError):
-    def __init__(self) -> None:
-        super().__init__(
-            "Api Key doesn't exist",
-        )
