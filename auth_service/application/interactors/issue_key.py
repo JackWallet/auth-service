@@ -26,8 +26,7 @@ class IssueKeyRequest:  # type:ignore[misc]
     status: APIKeyStatusEnum
     created_at: datetime
     last_accessed: datetime
-    request_access_level: APIKeyAccessLevelEnum
-
+    request_api_key_raw: str
 
 @dataclass(frozen=True, slots=True)
 class IssueKeyResult:  # type:ignore[misc]
