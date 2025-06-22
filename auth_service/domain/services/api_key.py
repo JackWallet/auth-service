@@ -5,7 +5,6 @@ from domain.entities.api_key import (
     APIKeyAccessLevelEnum,
     APIKeyStatusEnum,
 )
-from domain.ports.api_key_encryption import APIKeyEncryption
 from domain.ports.api_key_generator import APIKeyGenerator
 
 
