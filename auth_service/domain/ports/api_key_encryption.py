@@ -1,13 +1,11 @@
 from abc import ABC, abstractmethod
 
-from domain.entities.api_key import APIKey
-
 
 class APIKeyEncryption(ABC):
     @abstractmethod
-    def encrypt(self, key: APIKey) -> None:
+    def encrypt(self, key_raw: str) -> str:
         raise NotImplementedError
 
     @abstractmethod
-    def decrypt(self, key: APIKey) -> None:
+    def decrypt(self, key_raw: str) -> str:
         raise NotImplementedError

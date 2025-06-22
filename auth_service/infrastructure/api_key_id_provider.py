@@ -24,7 +24,7 @@ class ApiKeyIdProviderImpl(
         self,
         data: ApiKeyIdProviderRequest,
     ) -> ApiKeyIdProviderResponce:
-        key_value = self._api_key_encryption.encrypt(key=data.key_raw)
+        key_value = self._api_key_encryption.encrypt(key_raw=data.key_raw)
         api_key = await self._api_key_reader.get_key_by_key_value(
             key_value=key_value,
         )

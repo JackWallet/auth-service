@@ -104,7 +104,7 @@ class IssueKey(Interactor[IssueKeyRequest, IssueKeyResult]):
 
         api_key = self._api_key_service.create()
         key_raw = api_key.key
-        self._api_key_encryption.encrypt(key=api_key)
+        api_key.key = self._api_key_encryption.encrypt(key_raw=key_raw)
         await self._api_key_writer.add_api_key(api_key=api_key)
         await self._transaction_manager.commit()
         return IssueKeyResult(key=key_raw)
