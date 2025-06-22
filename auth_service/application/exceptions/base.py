@@ -16,3 +16,7 @@ class ApiKeyExpiredError(AuthenticationError):
 
 class ApiKeyRevokedError(AuthenticationError):
     pass
+
+
+class ApiKeyNotFoundError(AuthenticationError):
+    pass
