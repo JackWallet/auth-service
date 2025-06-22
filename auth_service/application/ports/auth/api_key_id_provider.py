@@ -17,11 +17,11 @@ class ApiKeyIdProviderResponce:
 
 
 class ApiKeyIdProvider(
-    IdProvider[ApiKeyIdProviderRequest, ApiKeyIdProviderResponce],
+    IdProvider[ApiKeyIdProviderRequest, ApiKeyIdProviderResponce | None],
 ):
     @abstractmethod
     async def get_user_acknowledgements(
         self,
         data: ApiKeyIdProviderRequest,
-    ) -> ApiKeyIdProviderResponce:
+    ) -> ApiKeyIdProviderResponce | None:
         raise NotImplementedError
