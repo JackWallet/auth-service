@@ -26,7 +26,7 @@ from application.ports.interactor import Interactor
 from domain.entities.api_key import (
     APIKeyAccessLevelEnum,
 )
-from domain.entities.api_key_id import APIKeyId
+from domain.ports.api_key_encryption import APIKeyEncryption
 from domain.services.api_key import APIKeyService
 
 logger = logging.getLogger(__name__)
@@ -41,14 +41,14 @@ class IssueKeyRequest:  # type:ignore[misc]
 @dataclass(frozen=True, slots=True)
 class IssueKeyResult:  # type:ignore[misc]
     key: str
-    key_id: APIKeyId
 
 
 class IssueKey(Interactor[IssueKeyRequest, IssueKeyResult]):
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         api_key_writer: ApiKeyWriterRepository,
         transaction_manager: TransactionManager,
+        api_key_encryption: APIKeyEncryption,
         api_key_service: APIKeyService,
         access_validator: AccessValidator,
         id_provider: ApiKeyIdProvider,
@@ -58,6 +58,7 @@ class IssueKey(Interactor[IssueKeyRequest, IssueKeyResult]):
         self._api_key_service = api_key_service
         self._id_provider = id_provider
         self._api_key_validator = access_validator
+        self._api_key_encryption = api_key_encryption
 
     async def __call__(self, data: IssueKeyRequest) -> IssueKeyResult:
         id_provider_responce = (
@@ -102,6 +103,8 @@ class IssueKey(Interactor[IssueKeyRequest, IssueKeyResult]):
             raise key_expired_auth_err from validation_err
 
         api_key = self._api_key_service.create()
+        key_raw = api_key.key
+        self._api_key_encryption.encrypt(key=api_key)
         await self._api_key_writer.add_api_key(api_key=api_key)
         await self._transaction_manager.commit()
-        return IssueKeyResult()
+        return IssueKeyResult(key=key_raw)
