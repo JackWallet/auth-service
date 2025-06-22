@@ -3,10 +3,11 @@ from application.exceptions.base import (
     ApiKeyRevokedError,
     InsufficientPrivilegesError,
 )
+from application.ports.access_validator import AccessValidator
 from domain.entities.api_key import APIKeyAccessLevelEnum, APIKeyStatusEnum
 
 
-class ApiKeyValidator:
+class ApiKeyValidator(AccessValidator):
     @staticmethod
     def validate_api_key_access_level(
         input_access_level: APIKeyAccessLevelEnum,
