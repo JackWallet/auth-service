@@ -6,7 +6,7 @@ class InsufficientPrivilegesError(ApplicationError):
     pass
 
 
-class AuthenticationError(InsufficientPrivilegesError):
+class AuthenticationError(ApplicationError):
     pass
 
 
