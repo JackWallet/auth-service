@@ -13,10 +13,8 @@ class APIKeyService:
     def __init__(
         self,
         key_generator: APIKeyGenerator,
-        key_encryption: APIKeyEncryption,
     ) -> None:
         self._key_generator = key_generator
-        self._key_encryption = key_encryption
 
     def create(self) -> APIKey:
         now = datetime.now(tz=UTC)
