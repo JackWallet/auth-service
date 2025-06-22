@@ -5,7 +5,7 @@ class ValidationError(ApplicationError):
     pass
 
 
-class InsufficientPrivilegesError(ValidationError):
+class InsufficientPrivilegesValidationError(ValidationError):
     def __init__(self, access_level_required: str) -> None:
         super().__init__(
             f"You need {access_level_required} \
@@ -13,21 +13,21 @@ class InsufficientPrivilegesError(ValidationError):
         )
 
 
-class ApiKeyExpiredError(ValidationError):
+class ApiKeyExpiredValidationError(ValidationError):
     def __init__(self) -> None:
         super().__init__(
             "Api Key has been expired",
         )
 
 
-class ApiKeyRevokedError(ValidationError):
+class ApiKeyRevokedValidationError(ValidationError):
     def __init__(self) -> None:
         super().__init__(
             "Api Key has been revoked",
         )
 
 
-class ApiKeyNotFoundError(ValidationError):
+class ApiKeyNotFoundValidationError(ValidationError):
     def __init__(self) -> None:
         super().__init__(
             "Api Key doesn't exist",
