@@ -17,7 +17,9 @@ class ApiKeyValidator(AccessValidator):
             input_access_level is APIKeyAccessLevelEnum.WRITE
             and target_access_level is APIKeyAccessLevelEnum.READ
         ):
-            raise InsufficientPrivilegesError
+            raise InsufficientPrivilegesError(
+                access_level_required=target_access_level,
+            )
 
     @staticmethod
     def validate_access_status(api_key_status: APIKeyStatusEnum) -> None:
