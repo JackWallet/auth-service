@@ -6,7 +6,7 @@ from domain.entities.api_key import APIKey
 
 class ApiKeyReaderRepository(Protocol):
     @abstractmethod
-    async def get_key_by_key_value(self, key_value: str) -> APIKey:
+    async def get_key_by_key_value(self, key_value: str) -> APIKey | None:
         raise NotImplementedError
 
 
