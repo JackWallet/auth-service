@@ -83,3 +83,5 @@ class RevokeKey(Interactor[RevokeKeyRequest, None]):
             )
             logger.info(str(key_expired_auth_err))
             raise key_expired_auth_err from validation_err
+
+        await self._api_key_writer.revoke_api_key(key=data.key)
