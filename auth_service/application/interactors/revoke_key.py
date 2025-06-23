@@ -1,7 +1,16 @@
+import logging
 from dataclasses import dataclass
 
-from application.exceptions.auth import ApiKeyNotFoundAuthError, InsufficientPrivilegesAuthError
-from application.exceptions.validation import ApiKeyRevokedValidationError, InsufficientPrivilegesValidationError
+from application.exceptions.auth import (
+    ApiKeyNotFoundAuthError,
+    ApiKeyRevokedAuthError,
+    InsufficientPrivilegesAuthError,
+)
+from application.exceptions.validation import (
+    ApiKeyExpiredValidationError,
+    ApiKeyRevokedValidationError,
+    InsufficientPrivilegesValidationError,
+)
 from application.ports.access_validator import AccessValidator
 from application.ports.auth.api_key_id_provider import (
     ApiKeyIdProvider,
@@ -12,6 +21,8 @@ from application.ports.database.repositories.api_key_repository import (
 )
 from application.ports.interactor import Interactor
 from domain.entities.api_key import APIKeyAccessLevelEnum
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True, slots=True)
