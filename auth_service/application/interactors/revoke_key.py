@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from application.exceptions.auth import ApiKeyNotFoundAuthError
-from application.exceptions.validation import ApiKeyRevokedValidationError
+from application.exceptions.auth import ApiKeyNotFoundAuthError, InsufficientPrivilegesAuthError
+from application.exceptions.validation import ApiKeyRevokedValidationError, InsufficientPrivilegesValidationError
 from application.ports.access_validator import AccessValidator
 from application.ports.auth.api_key_id_provider import (
     ApiKeyIdProvider,
@@ -11,6 +11,7 @@ from application.ports.database.repositories.api_key_repository import (
     ApiKeyWriterRepository,
 )
 from application.ports.interactor import Interactor
+from domain.entities.api_key import APIKeyAccessLevelEnum
 
 
 @dataclass(frozen=True, slots=True)
@@ -28,7 +29,7 @@ class RevokeKey(Interactor[RevokeKeyRequest, None]):
     ) -> None:
         self._api_key_writer = api_key_writer
         self._id_provider = id_provider
-        self._access_validator = access_validator
+        self._api_key_validator = access_validator
 
     async def __call__(self, data: RevokeKeyRequest) -> None:
         id_provider_responce = (
