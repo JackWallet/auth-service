@@ -1,3 +1,4 @@
+from application.exceptions.auth import ApiKeyNotFoundAuthError
 from application.ports.auth.api_key_id_provider import (
     ApiKeyIdProvider,
     ApiKeyIdProviderRequest,
@@ -28,6 +29,8 @@ class ApiKeyIdProviderImpl(
         api_key = await self._api_key_reader.get_key_by_key_value(
             key_value=key_value,
         )
+        if api_key is None:
+            raise ApiKeyNotFoundAuthError(raw_key=data.key_raw)
 
         return ApiKeyIdProviderResponce(
             key_access_level=api_key.access_level,
