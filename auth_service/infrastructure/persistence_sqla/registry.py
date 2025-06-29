@@ -5,6 +5,7 @@ from typing import Final
 from sqlalchemy import MetaData
 from sqlalchemy.orm import registry
 
+# Most typical naming convensions
 NAMING_CONVENTIONS: Final[Mapping[str, str]] = MappingProxyType(
     {
         "ix": "ix_%(column_0_label)s",
