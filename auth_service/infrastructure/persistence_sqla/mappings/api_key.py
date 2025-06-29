@@ -7,8 +7,14 @@ from sqlalchemy import (
     Table,
     func,
 )
+from sqlalchemy.orm import composite
 
-from domain.entities.api_key import APIKeyAccessLevelEnum, APIKeyStatusEnum
+from domain.entities.api_key import (
+    APIKey,
+    APIKeyAccessLevelEnum,
+    APIKeyStatusEnum,
+)
+from domain.entities.api_key_id import APIKeyId
 from infrastructure.persistence_sqla.registry import mapping_registry
 
 api_keys_table = Table(
@@ -41,3 +47,18 @@ api_keys_table = Table(
         nullable=False,
     ),
 )
+
+
+def map_api_key_table() -> None:
+    mapping_registry.map_imperatively(
+        APIKey,
+        api_keys_table,
+        properties={
+            "key_id": composite(APIKeyId, api_keys_table.c.id),
+            "key": api_keys_table.c.key,
+            "access_level": api_keys_table.c.access_level,
+            "status": api_keys_table.c.status,
+            "created_at": api_keys_table.c.created_at,
+            "last_accessed": api_keys_table.c.last_accessed,
+        },
+    )
