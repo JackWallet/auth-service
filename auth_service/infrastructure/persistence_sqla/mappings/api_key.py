@@ -29,7 +29,7 @@ api_keys_table = Table(
         nullable=False,
     ),
     Column(
-        "created",
+        "created_at",
         DateTime,
         server_default=func.now(),
         nullable=False,
