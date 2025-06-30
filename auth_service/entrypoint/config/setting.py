@@ -43,3 +43,7 @@ class PostgresSettings(BaseModel):
 
 class LoggingLevelSettings(BaseModel):
     logging_level: LoggingLevel = Field(alias="LOGGING_LEVEL")
+
+
+class FernetKeySettings(BaseModel):
+    fernet_key: str = Field(alias="FERNET_KEY_BASE64")
