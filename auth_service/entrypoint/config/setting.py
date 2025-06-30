@@ -1,6 +1,7 @@
 from typing import NewType, cast
 
 from pydantic import BaseModel, Field, PostgresDsn, field_validator
+from pydantic.networks import IPvAnyAddress
 
 from entrypoint.logging.logs import LoggingLevel
 
@@ -11,7 +12,7 @@ class PostgresSettings(BaseModel):
     user: str = Field(alias="USER")
     password: str = Field(alias="PASSWORD")
     db: str = Field(alias="DB")
-    host: str = Field(alias="HOST")
+    host: IPvAnyAddress = Field(alias="HOST")
     port: int = Field(alias="PORT")
     driver: str = Field(alias="DRIVER")
 
@@ -32,7 +33,7 @@ class PostgresSettings(BaseModel):
                     scheme=f"postgresql+{self.driver}",
                     username=self.user,
                     password=self.password,
-                    host=self.host,
+                    host=str(self.host),
                     port=self.port,
                     path=self.db,
                 ),
