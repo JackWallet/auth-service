@@ -5,7 +5,12 @@ description = "auth service"
 authors = [{ name = "InWamos", email = "mykyta.pidgornyi@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = ["fastapi[standard] (>=0.115.12,<0.116.0)", "cryptography (>=45.0.3,<46.0.0)", "sqlalchemy (>=2.0.41,<3.0.0)", "alembic (>=1.16.2,<2.0.0)"]
+dependencies = [
+    "fastapi[standard] (>=0.115.12,<0.116.0)",
+    "cryptography (>=45.0.3,<46.0.0)",
+    "sqlalchemy (>=2.0.41,<3.0.0)",
+    "alembic (>=1.16.2,<2.0.0)",
+]
 
 
 [build-system]
@@ -84,3 +89,4 @@ extend-select = ["I"]
 
 [tool.ruff.lint.per-file-ignores]
 "auth_service/domain/value_objects/base.py" = ["B024"]
+"auth_service/infrastructure/persistence_sqla/**" = ["ALL"]
