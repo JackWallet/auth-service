@@ -24,9 +24,14 @@ class PostgresSettings(BaseModel):
     port: int = Field(alias="PORT")
     driver: str = Field(alias="DRIVER")
 
-    @field_validator("port")
+    @field_validator("port", mode="before")
     @classmethod
-    def validate_port(cls, v: int) -> int:
+    def validate_port(cls, v: int | str) -> int:
+        if isinstance(v, str) and v.isnumeric() is False:
+            msg = "Postgres port should be a number"
+            raise ValueError(msg)
+        v = int(v)
+
         if not 1 <= v <= 65535:  # noqa: PLR2004
             msg = "Invalid postgres port was provided"
             raise ValueError(msg)
