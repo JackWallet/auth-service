@@ -53,6 +53,17 @@ class PostgresSettings(BaseModel):
             ),
         )
 
+    @classmethod
+    def from_env(cls) -> "PostgresSettings":
+        return cls(
+            USER=get_str_from_env("POSTGRES_USER"),
+            PASSWORD=get_str_from_env("POSTGRES_PASSWORD"),
+            DB=get_str_from_env("POSTGRES_DB_NAME"),
+            HOST=get_str_from_env("POSTGRES_HOST"),  # type: ignore[arg-type] # Pydantic-side validation
+            PORT=get_str_from_env("POSTGRES_PORT"),  # type: ignore[arg-type] # Pydantic-side validation
+            DRIVER=get_str_from_env("POSTGRES_DRIVER"),
+        )
+
 
 class LoggingLevelSettings(BaseModel):
     logging_level: LoggingLevel = Field(alias="LOGGING_LEVEL")
