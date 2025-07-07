@@ -63,6 +63,6 @@ class FernetKeySettings(BaseModel):
 
     @classmethod
     def from_env(cls) -> "FernetKeySettings":
-        return FernetKeySettings(
+        return cls(
             FERNET_KEY_BASE64=get_str_from_env("FERNET_KEY_BASE64"),
         )
