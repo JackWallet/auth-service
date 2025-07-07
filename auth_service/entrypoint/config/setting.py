@@ -8,6 +8,12 @@ from entrypoint.logging.logs import LoggingLevel
 PostgresSettingsDsn = NewType("PostgresSettingsDsn", str)
 
 
+def get_str_from_env(key: str) -> str:
+    if value := os.getenv(key):
+        return value
+    raise MissingConfigVariableError(variable_name=key)
+
+
 class PostgresSettings(BaseModel):
     user: str = Field(alias="USER")
     password: str = Field(alias="PASSWORD")
