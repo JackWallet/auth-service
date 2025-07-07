@@ -1,8 +1,10 @@
+import os
 from typing import NewType, cast
 
 from pydantic import BaseModel, Field, PostgresDsn, field_validator
 from pydantic.networks import IPvAnyAddress
 
+from entrypoint.error import MissingConfigVariableError
 from entrypoint.logging.logs import LoggingLevel
 
 PostgresSettingsDsn = NewType("PostgresSettingsDsn", str)
@@ -53,3 +55,9 @@ class LoggingLevelSettings(BaseModel):
 
 class FernetKeySettings(BaseModel):
     fernet_key: str = Field(alias="FERNET_KEY_BASE64")
+
+    @classmethod
+    def from_env(cls) -> "FernetKeySettings":
+        return FernetKeySettings(
+            FERNET_KEY_BASE64=get_str_from_env("FERNET_KEY_BASE64"),
+        )
