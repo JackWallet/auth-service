@@ -1,4 +1,4 @@
-class ConfigError(ValueError):
+class MissingConfigVariableError(ValueError):
     def __init__(self, variable_name: str) -> None:
         self._variable_name = variable_name
 
