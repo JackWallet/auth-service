@@ -3,4 +3,4 @@ class ConfigError(ValueError):
         self._variable_name = variable_name
 
     def __str__(self) -> str:
-        return f"Have you specified the variable {self._variable_name}?"
+        return f"Failed to parse {self._variable_name}. Have you specified it?"
