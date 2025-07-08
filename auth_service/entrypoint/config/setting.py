@@ -1,4 +1,5 @@
 import os
+from dataclasses import dataclass
 from typing import NewType, cast
 
 from pydantic import BaseModel, Field, PostgresDsn, field_validator
@@ -83,3 +84,22 @@ class FernetKeySettings(BaseModel):
         return cls(
             FERNET_KEY_BASE64=get_str_from_env("FERNET_KEY_BASE64"),
         )
+
+
+@dataclass(slots=True, frozen=True)
+class Config:
+    postgres_config: PostgresSettings
+    logging_config: LoggingLevelSettings
+    fernet_key_config: FernetKeySettings
+
+
+def load_config_from_env() -> Config:
+    postgres_config = PostgresSettings.from_env()
+    logging_config = LoggingLevelSettings.from_env()
+    fernet_key_config = FernetKeySettings.from_env()
+
+    return Config(
+        postgres_config=postgres_config,
+        logging_config=logging_config,
+        fernet_key_config=fernet_key_config,
+    )
