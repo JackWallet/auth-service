@@ -68,6 +68,12 @@ class PostgresSettings(BaseModel):
 class LoggingLevelSettings(BaseModel):
     logging_level: LoggingLevel = Field(alias="LOGGING_LEVEL")
 
+    @classmethod
+    def from_env(cls) -> "LoggingLevelSettings":
+        return cls(
+            LOGGING_LEVEL=get_str_from_env("LOGGING_LEVEL"),  # type: ignore[arg-type] # Pydantic-side validation
+        )
+
 
 class FernetKeySettings(BaseModel):
     fernet_key: str = Field(alias="FERNET_KEY_BASE64")
