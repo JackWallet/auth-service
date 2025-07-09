@@ -40,7 +40,7 @@ class PostgresSettings(BaseModel):
         return v
 
     @property
-    def dsn(self) -> str:
+    def dsn(self) -> PostgresSettingsDsn:
         url_safe_password = quote_plus(string=self.password)
         url_safe_username = quote_plus(string=self.user)
 
