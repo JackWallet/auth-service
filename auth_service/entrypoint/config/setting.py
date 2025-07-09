@@ -1,6 +1,7 @@
 import os
 from dataclasses import dataclass
 from typing import NewType, cast
+from urllib.parse import quote_plus
 
 from pydantic import BaseModel, Field, PostgresDsn, field_validator
 from pydantic.networks import IPvAnyAddress
@@ -40,13 +41,16 @@ class PostgresSettings(BaseModel):
 
     @property
     def dsn(self) -> str:
+        url_safe_password = quote_plus(string=self.password)
+        url_safe_username = quote_plus(string=self.user)
+
         return cast(
             "PostgresSettingsDsn",
             str(
                 PostgresDsn.build(
                     scheme=f"postgresql+{self.driver}",
-                    username=self.user,
-                    password=self.password,
+                    username=url_safe_username,
+                    password=url_safe_password,
                     host=str(self.host),
                     port=self.port,
                     path=self.db,
