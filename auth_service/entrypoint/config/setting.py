@@ -1,9 +1,9 @@
 import os
 from dataclasses import dataclass
 from typing import NewType, cast
-from urllib.parse import quote_plus
 
-from pydantic import BaseModel, Field, PostgresDsn, field_validator
+import sqlalchemy
+from pydantic import BaseModel, Field, field_validator
 from pydantic.networks import IPvAnyAddress
 
 from entrypoint.error import MissingConfigVariableError
@@ -41,21 +41,17 @@ class PostgresSettings(BaseModel):
 
     @property
     def dsn(self) -> PostgresSettingsDsn:
-        url_safe_password = quote_plus(string=self.password)
-        url_safe_username = quote_plus(string=self.user)
-
+        url = sqlalchemy.URL.create(
+            drivername=f"postgresql+{self.driver}",
+            username=self.user,
+            password=self.password,
+            host=str(self.host),
+            port=self.port,
+            database=self.db,
+        )
         return cast(
             "PostgresSettingsDsn",
-            str(
-                PostgresDsn.build(
-                    scheme=f"postgresql+{self.driver}",
-                    username=url_safe_username,
-                    password=url_safe_password,
-                    host=str(self.host),
-                    port=self.port,
-                    path=self.db,
-                ),
-            ),
+            str(url),
         )
 
     @classmethod
