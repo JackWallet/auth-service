@@ -1,6 +1,6 @@
 import os
 from dataclasses import dataclass
-from typing import NewType, cast
+from typing import NewType
 
 import sqlalchemy
 from pydantic import BaseModel, Field, field_validator
@@ -40,19 +40,15 @@ class PostgresSettings(BaseModel):
         return v
 
     @property
-    def dsn(self) -> PostgresSettingsDsn:
-        url = sqlalchemy.URL.create(
+    def alchemy_url(self) -> str:
+        return sqlalchemy.URL.create(
             drivername=f"postgresql+{self.driver}",
             username=self.user,
             password=self.password,
             host=str(self.host),
             port=self.port,
             database=self.db,
-        )
-        return cast(
-            "PostgresSettingsDsn",
-            str(url),
-        )
+        ).render_as_string(hide_password=False)
 
     @classmethod
     def from_env(cls) -> "PostgresSettings":

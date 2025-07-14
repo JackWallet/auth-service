@@ -11,9 +11,9 @@ from alembic import context
 # access to the values within the .ini file in use.
 config = context.config
 
-# Use psycopg2 driver to run the migrations
+# Use pg8000 driver to run the migrations
 pgsql_config: PostgresSettings = PostgresSettings.from_env()
-config.set_main_option("sqlalchemy.url", pgsql_config.dsn)
+config.set_main_option("sqlalchemy.url", pgsql_config.alchemy_url)
 
 
 # Interpret the config file for Python logging.
