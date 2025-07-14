@@ -56,12 +56,17 @@ class PostgresSettings(BaseModel):
 
     @classmethod
     def from_env(cls) -> "PostgresSettings":
+        port = get_str_from_env("POSTGRES_PORT")
+        if port.isdigit() is not True:
+            msg = "The port should be a number"
+            raise ValueError(msg)
+
         return cls(
             USER=get_str_from_env("POSTGRES_USER"),
             PASSWORD=get_str_from_env("POSTGRES_PASSWORD"),
             DB=get_str_from_env("POSTGRES_DB_NAME"),
             HOST=get_str_from_env("POSTGRES_HOST"),  # type: ignore[arg-type] # Pydantic-side validation
-            PORT=get_str_from_env("POSTGRES_PORT"),  # type: ignore[arg-type] # Pydantic-side validation
+            PORT=int(port),
             DRIVER=get_str_from_env("POSTGRES_DRIVER"),
         )
 
