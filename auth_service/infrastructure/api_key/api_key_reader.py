@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -16,3 +18,11 @@ class SQLAlchemyApiKeyReaderRepository(ApiKeyReaderRepository):
         query = select(APIKey).where(api_keys_table.c.key == key_value)
         query_result = await self._session.execute(query)
         return query_result.scalar_one_or_none()
+
+    async def get_keys_created_before(
+        self,
+        cutoff_date: datetime,
+    ) -> list[APIKey] | None:
+        query = select(APIKey).where(api_keys_table.c.created_at < cutoff_date)
+        query_result = await self._session.execute(query)
+        return list(query_result.scalars().all())
