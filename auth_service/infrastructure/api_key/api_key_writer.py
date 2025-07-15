@@ -22,3 +22,11 @@ class SQLAlchemyApiKeywriterRepository(ApiKeyWriterRepository):
             .values(status=APIKeyStatusEnum.REVOKED)
         )
         await self._session.execute(query)
+
+    async def expire_api_key(self, key: str) -> None:
+        query = (
+            update(APIKey)
+            .where(api_keys_table.c.key == key)
+            .values(status=APIKeyStatusEnum.EXPIRED)
+        )
+        await self._session.execute(query)

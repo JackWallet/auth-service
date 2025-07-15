@@ -18,3 +18,7 @@ class ApiKeyWriterRepository(Protocol):
     @abstractmethod
     async def revoke_api_key(self, key: str) -> None:
         raise NotImplementedError
+
+    @abstractmethod
+    async def expire_api_key(self, key: str) -> None:
+        raise NotImplementedError
