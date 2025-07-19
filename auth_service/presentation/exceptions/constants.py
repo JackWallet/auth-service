@@ -12,6 +12,7 @@ from application.exceptions.auth import (
     InsufficientPrivilegesAuthError,
 )
 from application.exceptions.base import ApplicationError
+from domain.exceptions.base import DomainError
 
 EXCEPTION_MAPPING_PROXY: Final[MappingProxyType[type[Exception], int]] = (
     MappingProxyType(
@@ -22,6 +23,7 @@ EXCEPTION_MAPPING_PROXY: Final[MappingProxyType[type[Exception], int]] = (
             ApiKeyNotFoundAuthError: status.HTTP_401_UNAUTHORIZED,
             InsufficientPrivilegesAuthError: status.HTTP_403_FORBIDDEN,
             ValidationError: status.HTTP_422_UNPROCESSABLE_ENTITY,
+            DomainError: status.HTTP_422_UNPROCESSABLE_ENTITY,
             ApplicationError: status.HTTP_500_INTERNAL_SERVER_ERROR,
         },
     )
