@@ -5,12 +5,13 @@ from dishka import FromDishka
 from fastapi import Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+from application.exceptions.api_key import ApiKeyNotFoundError
 from application.exceptions.auth import ApiKeyNotFoundAuthError
-from application.ports.auth.api_key_id_provider import (
-    ApiKeyIdProvider,
-    ApiKeyIdProviderRequest,
-    ApiKeyIdProviderResponce,
+from application.interactors.get_key_by_body import (
+    GetKeyByBody,
+    GetKeyByBodyRequest,
 )
+from domain.entities.api_key import APIKey, APIKeyAccessLevelEnum
 
 logger = logging.getLogger(__name__)
 
@@ -22,13 +23,22 @@ async def get_current_api_key(
         HTTPAuthorizationCredentials,
         Security(api_key_scheme),
     ],
-    interactor: FromDishka[ApiKeyIdProvider],
-) -> ApiKeyIdProviderResponce:
+    interactor: FromDishka[GetKeyByBody],
+) -> APIKey:
     api_key_raw = credentials.credentials
-    request = ApiKeyIdProviderRequest(key_raw=api_key_raw)
+    request = GetKeyByBodyRequest(key_raw=api_key_raw)
     try:
-        logger.debug("Trying to authenticate key %s", api_key_raw)
-        return interactor.get_user_acknowledgements(data=request)
-    except ApiKeyNotFoundAuthError:
+        logger.debug("Trying to find %s", api_key_raw)
+        api_key = await interactor(data=request)
+    except ApiKeyNotFoundError as e:
         logger.debug("Api key %s was not found", api_key_raw)
-        raise
+        raise ApiKeyNotFoundAuthError(raw_key=api_key_raw) from e
+    else:
+        logger.debug("Found key %s", api_key_raw)
+        return api_key.key
+
+
+
+async def requires_write_access(
+    access_level: APIKeyAccessLevelEnum,
+): ...
