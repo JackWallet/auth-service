@@ -30,5 +30,5 @@ async def get_current_api_key(
         logger.debug("Trying to authenticate key %s", api_key_raw)
         return interactor.get_user_acknowledgements(data=request)
     except ApiKeyNotFoundAuthError:
-        logger.debug("Api key %s was never found", api_key_raw)
+        logger.debug("Api key %s was not found", api_key_raw)
         raise
