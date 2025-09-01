@@ -11,7 +11,10 @@ from application.interactors.get_key_by_body import (
     GetKeyByBody,
     GetKeyByBodyRequest,
 )
-from domain.entities.api_key import APIKey, APIKeyAccessLevelEnum
+from domain.entities.api_key import (
+    APIKey,
+)
+from presentation.auth.service import is_active, is_allowed_to_write
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +41,16 @@ async def get_current_api_key(
         return api_key.key
 
 
+async def requires_read_access(
+    api_key: Annotated[APIKey, Security(get_current_api_key)],
+) -> APIKey:
+    is_active(api_key)
+    return api_key
+
 
 async def requires_write_access(
-    access_level: APIKeyAccessLevelEnum,
-): ...
+    api_key: Annotated[APIKey, Security(get_current_api_key)],
+) -> APIKey:
+    is_active(api_key)
+    is_allowed_to_write(api_key)
+    return api_key
