@@ -1,0 +1,56 @@
+{
+    "configurations": [
+        {
+            "name": "Python Debugger: FastAPI",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "main:app",
+                "--reload"
+            ],
+        },
+        {
+            "name": "Run Alembic Migrations",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "alembic",
+            "args": [
+                "upgrade",
+                "head"
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "envFile": "${workspaceFolder}/.env",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/auth_service",
+                "POSTGRES_DRIVER": "psycopg2"
+            }
+        },
+        {
+            "name": "Generate Alembic Migration",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "alembic",
+            "args": [
+                "revision",
+                "--autogenerate",
+                "-m",
+                "${input:migrationMessage}"
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/auth_service"
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "migrationMessage",
+            "description": "Enter migration message",
+            "default": "Auto-generated migration",
+            "type": "promptString"
+        }
+    ]
+}

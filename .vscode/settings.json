@@ -1,0 +1,8 @@
+{
+    "python.analysis.autoImportCompletions": true,
+    "python.defaultInterpreterPath": "./venv/bin/python",
+    "python.analysis.extraPaths": ["./auth_service"],
+    "python.analysis.autoSearchPaths": true,
+    "python.terminal.executeInFileDir": false,
+    "python.terminal.activateEnvironment": true
+}
